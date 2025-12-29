@@ -7,6 +7,7 @@ VALUE cLinechart;
 VALUE cWavelinechart;
 VALUE cStreamlinechart;
 VALUE cTimeserieslinechart;
+VALUE cHeatmap;
 VALUE cStyle;
 
 static VALUE ntcharts_upstream_version_rb(VALUE self) {
@@ -37,6 +38,7 @@ __attribute__((__visibility__("default"))) void Init_ntcharts(void) {
   Init_ntcharts_wavelinechart();
   Init_ntcharts_streamlinechart();
   Init_ntcharts_timeserieslinechart();
+  Init_ntcharts_heatmap();
   Init_ntcharts_style();
 
   rb_define_singleton_method(mNtcharts, "upstream_version", ntcharts_upstream_version_rb, 0);

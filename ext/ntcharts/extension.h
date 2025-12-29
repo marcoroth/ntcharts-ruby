@@ -11,6 +11,7 @@ extern VALUE cLinechart;
 extern VALUE cWavelinechart;
 extern VALUE cStreamlinechart;
 extern VALUE cTimeserieslinechart;
+extern VALUE cHeatmap;
 extern VALUE cStyle;
 
 extern const rb_data_type_t sparkline_type;
@@ -19,6 +20,7 @@ extern const rb_data_type_t linechart_type;
 extern const rb_data_type_t wavelinechart_type;
 extern const rb_data_type_t streamlinechart_type;
 extern const rb_data_type_t timeserieslinechart_type;
+extern const rb_data_type_t heatmap_type;
 extern const rb_data_type_t style_type;
 
 typedef struct {
@@ -44,6 +46,10 @@ typedef struct {
 typedef struct {
   unsigned long long handle;
 } ntcharts_timeserieslinechart_t;
+
+typedef struct {
+  unsigned long long handle;
+} ntcharts_heatmap_t;
 
 typedef struct {
   unsigned long long handle;
@@ -73,6 +79,10 @@ typedef struct {
   ntcharts_timeserieslinechart_t *timeserieslinechart; \
   TypedData_Get_Struct(self, ntcharts_timeserieslinechart_t, &timeserieslinechart_type, timeserieslinechart)
 
+#define GET_HEATMAP(self, heatmap) \
+  ntcharts_heatmap_t *heatmap; \
+  TypedData_Get_Struct(self, ntcharts_heatmap_t, &heatmap_type, heatmap)
+
 #define GET_STYLE(self, style) \
   ntcharts_style_t *style; \
   TypedData_Get_Struct(self, ntcharts_style_t, &style_type, style)
@@ -87,6 +97,7 @@ void Init_ntcharts_linechart(void);
 void Init_ntcharts_wavelinechart(void);
 void Init_ntcharts_streamlinechart(void);
 void Init_ntcharts_timeserieslinechart(void);
+void Init_ntcharts_heatmap(void);
 void Init_ntcharts_style(void);
 
 #endif

@@ -179,6 +179,41 @@ chart.draw_braille
 puts chart.view
 ```
 
+### Heatmap
+
+**Color-mapped data grids:**
+
+```ruby
+chart = Ntcharts::Heatmap.new(40, 12)
+
+chart.color_scale = [
+  "#000033", "#000066", "#000099",
+  "#0000CC", "#0000FF", "#3333FF",
+  "#6666FF", "#9999FF", "#CCCCFF"
+]
+
+15.times do |x|
+  12.times do |y|
+    value = Math.sin((x + y) * 0.3) * 0.5 + 0.5
+    chart.push(x.to_f, y.to_f, value)
+  end
+end
+
+puts chart.render
+```
+
+**Matrix data input:**
+
+```ruby
+matrix = Array.new(10) do |x|
+  Array.new(8) do |y|
+    Math.sin((x + y) * 0.3) * 0.5 + 0.5
+  end
+end
+
+chart.push_matrix(matrix)
+```
+
 ### Styling
 
 **All charts support lipgloss styling:**
@@ -216,6 +251,7 @@ chart.style = style
 | `Wavelinechart` | Multi-dataset lines | Named datasets, arc/thin line styles |
 | `Streamlinechart` | Scrolling streams | Push data, auto-scroll right-to-left |
 | `Timeserieslinechart` | Time-based charts | Ruby Time objects, date labels |
+| `Heatmap` | Color grids | Custom color scales, matrix input |
 
 ## Sparkline Methods
 
@@ -279,6 +315,18 @@ chart.style = style
 | `set_time_range(min, max)` | Set time range |
 | `line_style=` | Set line style (THIN/ARC) |
 
+## Heatmap Methods
+
+| Method | Description |
+|--------|-------------|
+| `push(x, y, value)` | Add heat point |
+| `push_all(points)` | Add array of `{x:, y:, v:}` |
+| `push_matrix(matrix)` | Add 2D array of values |
+| `color_scale=` | Set color gradient array |
+| `set_value_range(min, max)` | Set value range |
+| `auto_min_value=` / `auto_max_value=` | Auto-scaling |
+| `render` | Draw and return view |
+
 ## Line Style Constants
 
 Available on `Linechart`, `Wavelinechart`, `Streamlinechart`, `Timeserieslinechart`:
@@ -316,6 +364,7 @@ bundle exec rake compile
 ./demo/wavelinechart
 ./demo/streamlinechart
 ./demo/timeserieslinechart
+./demo/heatmap
 ./demo/streaming
 ```
 

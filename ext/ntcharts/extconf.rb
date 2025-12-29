@@ -64,6 +64,7 @@ $srcs = [
   "wavelinechart.c",
   "streamlinechart.c",
   "timeserieslinechart.c",
+  "heatmap.c",
   "style.c",
 ]
 

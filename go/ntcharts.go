@@ -10,6 +10,7 @@ import (
 	"sync"
 	"unsafe"
 	"github.com/NimbleMarkets/ntcharts/barchart"
+	"github.com/NimbleMarkets/ntcharts/heatmap"
 	"github.com/NimbleMarkets/ntcharts/linechart"
 	"github.com/NimbleMarkets/ntcharts/linechart/streamlinechart"
 	"github.com/NimbleMarkets/ntcharts/linechart/timeserieslinechart"
@@ -179,6 +180,31 @@ func freeTimeserieslinechart(id uint64) {
 	timeserieslinechartsMu.Lock()
 	delete(timeserieslinecharts, id)
 	timeserieslinechartsMu.Unlock()
+}
+
+var (
+	heatmaps   = make(map[uint64]*heatmap.Model)
+	heatmapsMu sync.RWMutex
+)
+
+func allocHeatmap(h *heatmap.Model) uint64 {
+	id := getNextID()
+	heatmapsMu.Lock()
+	heatmaps[id] = h
+	heatmapsMu.Unlock()
+	return id
+}
+
+func getHeatmap(id uint64) *heatmap.Model {
+	heatmapsMu.RLock()
+	defer heatmapsMu.RUnlock()
+	return heatmaps[id]
+}
+
+func freeHeatmap(id uint64) {
+	heatmapsMu.Lock()
+	delete(heatmaps, id)
+	heatmapsMu.Unlock()
 }
 
 var (

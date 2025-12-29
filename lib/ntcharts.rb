@@ -99,4 +99,8 @@ module Ntcharts
   class Timeserieslinechart
     include StyleSetters
   end
+
+  class Heatmap
+    include StyleSetters
+  end
 end

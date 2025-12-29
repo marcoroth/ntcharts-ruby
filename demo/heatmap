@@ -1,0 +1,161 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "../lib/ntcharts"
+
+puts "=== Ntcharts Heatmap Demo ==="
+puts
+puts "Heatmap displays color-mapped data over a grid,"
+puts "with intensity represented by color gradients."
+puts
+
+puts "1. Basic Heatmap (Default Grayscale)"
+puts "-" * 50
+h1 = Ntcharts::Heatmap.new(30, 10)
+
+10.times do |x|
+  10.times do |y|
+    value = (Math.sin(x * 0.5) * Math.cos(y * 0.5) * 0.5) + 0.5
+    h1.push(x.to_f, y.to_f, value)
+  end
+end
+
+puts h1.render
+puts
+puts "Width: #{h1.width}, Height: #{h1.height}"
+puts "X Range: #{h1.min_x} - #{h1.max_x}"
+puts "Y Range: #{h1.min_y} - #{h1.max_y}"
+puts
+
+puts "2. Custom Color Scale (Red to Yellow to Green)"
+puts "-" * 50
+h2 = Ntcharts::Heatmap.new(40, 12)
+
+h2.color_scale = [
+  "#FF0000",  # Red
+  "#FF3300",
+  "#FF6600",
+  "#FF9900",
+  "#FFCC00",
+  "#FFFF00",  # Yellow
+  "#CCFF00",
+  "#99FF00",
+  "#66FF00",
+  "#33FF00",
+  "#00FF00", # Green
+]
+
+15.times do |x|
+  12.times do |y|
+    value = (x + y) / 27.0
+    h2.push(x.to_f, y.to_f, value)
+  end
+end
+
+puts h2.render
+puts
+
+puts "3. Matrix Data (10x8 Grid)"
+puts "-" * 50
+h3 = Ntcharts::Heatmap.new(35, 10)
+
+h3.color_scale = [
+  "#000033",
+  "#000066",
+  "#000099",
+  "#0000CC",
+  "#0000FF",
+  "#3333FF",
+  "#6666FF",
+  "#9999FF",
+  "#CCCCFF",
+  "#FFFFFF",
+]
+
+matrix = Array.new(10) do |x|
+  Array.new(8) do |y|
+    (Math.sin((x + y) * 0.3) * 0.5) + 0.5
+  end
+end
+
+h3.push_matrix(matrix)
+
+puts h3.render
+puts
+
+puts "4. Fixed Value Range (0 to 100)"
+puts "-" * 50
+h4 = Ntcharts::Heatmap.new(40, 10)
+
+h4.auto_min_value = false
+h4.auto_max_value = false
+h4.set_value_range(0.0, 100.0)
+
+h4.color_scale = [
+  "#1a0033",
+  "#330066",
+  "#4d0099",
+  "#6600cc",
+  "#8000ff",
+  "#9933ff",
+  "#b366ff",
+  "#cc99ff",
+  "#e6ccff",
+]
+
+12.times do |x|
+  8.times do |y|
+    temp = rand(40..99)
+    h4.push(x.to_f, y.to_f, temp.to_f)
+  end
+end
+
+puts h4.render
+puts
+
+puts "5. Using push_all with Point Array"
+puts "-" * 50
+h5 = Ntcharts::Heatmap.new(25, 8)
+
+h5.color_scale = [
+  "#001a1a",
+  "#003333",
+  "#004d4d",
+  "#006666",
+  "#008080",
+  "#33cccc",
+  "#66ffff",
+  "#ccffff",
+]
+
+points = []
+
+8.times do |x|
+  6.times do |y|
+    value = (x * y) / 42.0
+    points << { x: x, y: y, v: value }
+  end
+end
+
+h5.push_all(points)
+
+puts h5.render
+puts
+
+puts "6. Checkerboard Pattern"
+puts "-" * 50
+h6 = Ntcharts::Heatmap.new(20, 8)
+
+h6.color_scale = ["#000000", "#FFFFFF"]
+
+8.times do |x|
+  8.times do |y|
+    value = (x + y) % 2
+    h6.push(x.to_f, y.to_f, value.to_f)
+  end
+end
+
+puts h6.render
+puts
+
+puts Ntcharts.version
