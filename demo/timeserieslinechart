@@ -1,0 +1,131 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "../lib/ntcharts"
+
+puts "=== Ntcharts TimeSeriesLineChart Demo ==="
+puts
+puts "TimeSeriesLineChart displays time-based data with automatic"
+puts "date/time labels on the X axis."
+puts
+
+puts "1. Basic TimeSeriesLineChart (Past 7 Days)"
+puts "-" * 50
+tc1 = Ntcharts::Timeserieslinechart.new(60, 12)
+
+base_time = Time.now - (7 * 24 * 60 * 60)
+
+(0..7).each do |day|
+  time = base_time + (day * 24 * 60 * 60)
+  value = (Math.sin(day * 0.8) * 30) + 50
+  tc1.push(time, value)
+end
+
+puts tc1.render
+puts
+puts "Width: #{tc1.width}, Height: #{tc1.height}"
+puts "Time Range: #{tc1.min_x} - #{tc1.max_x}"
+puts "Y Range: #{tc1.min_y} - #{tc1.max_y}"
+puts
+
+puts "2. Styled TimeSeriesLineChart (Green)"
+puts "-" * 50
+tc2 = Ntcharts::Timeserieslinechart.new(60, 10)
+green_style = Ntcharts::Style.new.foreground("2")
+tc2.style = green_style
+
+base_time = Time.now - (24 * 60 * 60)
+
+(0..24).each do |hour|
+  time = base_time + (hour * 60 * 60)
+  value = (Math.cos(hour * 0.3) * 20) + 50
+  tc2.push(time, value)
+end
+
+puts tc2.render
+puts
+
+puts "3. Multiple Time Series Datasets"
+puts "-" * 50
+tc3 = Ntcharts::Timeserieslinechart.new(70, 14)
+
+red_style = Ntcharts::Style.new.foreground("1")
+blue_style = Ntcharts::Style.new.foreground("4")
+yellow_style = Ntcharts::Style.new.foreground("3")
+
+tc3.set_data_set_style("temp_high", red_style)
+tc3.set_data_set_style("temp_low", blue_style)
+tc3.set_data_set_style("temp_avg", yellow_style)
+
+base_time = Time.now - (14 * 24 * 60 * 60)
+(0..14).each do |day|
+  time = base_time + (day * 24 * 60 * 60)
+  high = 75 + (Math.sin(day * 0.5) * 15) + (rand * 5)
+  low = 55 + (Math.sin(day * 0.5) * 10) + (rand * 5)
+  avg = (high + low) / 2
+
+  tc3.push_data_set("temp_high", time, high)
+  tc3.push_data_set("temp_low", time, low)
+  tc3.push_data_set("temp_avg", time, avg)
+end
+
+puts tc3.render_all
+puts
+puts "Red: High temps, Blue: Low temps, Yellow: Average"
+puts
+
+puts "4. Braille Rendering (Higher Resolution)"
+puts "-" * 50
+tc4 = Ntcharts::Timeserieslinechart.new(60, 10)
+purple_style = Ntcharts::Style.new.foreground("93")
+tc4.style = purple_style
+
+base_time = Time.now - (30 * 24 * 60 * 60)
+
+(0..60).each do |i|
+  time = base_time + (i * 12 * 60 * 60)
+  value = (Math.sin(i * 0.15) * 25) + 50 + (rand * 5)
+  tc4.push(time, value)
+end
+
+puts tc4.render_braille
+puts
+
+puts "5. Using Unix Timestamps"
+puts "-" * 50
+tc5 = Ntcharts::Timeserieslinechart.new(50, 8)
+
+base_unix = Time.now.to_i - (5 * 24 * 60 * 60)
+(0..10).each do |i|
+  unix_time = base_unix + (i * 12 * 60 * 60)
+  value = (i * 5) + 20
+  tc5.push(unix_time, value)
+end
+
+puts tc5.render
+puts
+
+puts "6. Custom Axis and Label Styles"
+puts "-" * 50
+
+tc6 = Ntcharts::Timeserieslinechart.new(60, 10)
+axis_style = Ntcharts::Style.new.foreground("240")
+label_style = Ntcharts::Style.new.foreground("245")
+line_style = Ntcharts::Style.new.foreground("39")
+
+tc6.axis_style = axis_style
+tc6.label_style = label_style
+tc6.style = line_style
+
+base_time = Time.now - (10 * 24 * 60 * 60)
+
+(0..20).each do |i|
+  time = base_time + (i * 12 * 60 * 60)
+  value = (Math.sin(i * 0.3) * 30) + 50
+  tc6.push(time, value)
+end
+
+puts tc6.render
+puts
+
+puts Ntcharts.version

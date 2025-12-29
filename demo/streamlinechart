@@ -1,0 +1,93 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "../lib/ntcharts"
+
+puts "=== Ntcharts StreamLineChart Demo ==="
+puts
+puts "StreamLineChart displays data flowing from right to left,"
+puts "perfect for real-time data visualization."
+puts
+
+puts "1. Basic StreamLineChart (Sine Wave)"
+puts "-" * 50
+sc1 = Ntcharts::Streamlinechart.new(50, 10)
+
+60.times do |i|
+  value = (Math.sin(i * 0.15) * 5) + 5
+  sc1.push(value)
+end
+
+puts sc1.render
+puts
+puts "Width: #{sc1.width}, Height: #{sc1.height}"
+puts "Graph Width: #{sc1.graph_width}, Graph Height: #{sc1.graph_height}"
+puts "Y Range: #{sc1.min_y} - #{sc1.max_y}"
+puts
+
+puts "2. Styled StreamLineChart (Green)"
+puts "-" * 50
+sc2 = Ntcharts::Streamlinechart.new(50, 8)
+green_style = Ntcharts::Style.new.foreground("2")
+sc2.style = green_style
+
+40.times do |i|
+  value = (Math.cos(i * 0.2) * 4) + 5
+  sc2.push(value)
+end
+
+puts sc2.render
+puts
+
+puts "3. Larger Chart with Noise Pattern"
+puts "-" * 50
+sc3 = Ntcharts::Streamlinechart.new(70, 12)
+purple_style = Ntcharts::Style.new.foreground("63")
+sc3.style = purple_style
+
+100.times do |i|
+  noise = (rand - 0.5) * 2
+  value = (Math.sin(i * 0.1) * 5) + noise + 6
+  sc3.push(value)
+end
+
+puts sc3.render
+puts
+
+puts "4. Data Scrolling Demo"
+puts "-" * 50
+sc4 = Ntcharts::Streamlinechart.new(40, 8)
+
+[20, 30, 40, 50].each do |count|
+  sc4.clear_data
+
+  count.times do |i|
+    value = (i % 10).to_f
+    sc4.push(value)
+  end
+
+  sc4.draw
+  puts "After #{count} pushes:"
+  puts sc4.view
+  puts
+end
+
+puts "5. Styled Axes"
+puts "-" * 50
+
+sc5 = Ntcharts::Streamlinechart.new(50, 10)
+axis_style = Ntcharts::Style.new.foreground("3")
+label_style = Ntcharts::Style.new.foreground("63")
+
+sc5.axis_style = axis_style
+sc5.label_style = label_style
+
+50.times do |i|
+  value = (i % 15).to_f
+  sc5.push(value)
+end
+
+puts sc5.render
+puts
+
+puts Ntcharts.version

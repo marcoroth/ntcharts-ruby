@@ -1,0 +1,62 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "../lib/ntcharts"
+
+puts "=== Ntcharts Styles Demo ==="
+puts
+puts "Demonstrating different color styles for charts"
+puts
+
+data = (1..25).map { |i| (Math.sin(i * 0.4) + 1) * 50 }
+
+colors = {
+  "Red (9)" => "9",
+  "Green (10)" => "10",
+  "Yellow (11)" => "11",
+  "Blue (12)" => "12",
+  "Magenta (13)" => "13",
+  "Cyan (14)" => "14",
+  "Purple (63)" => "63",
+  "Orange (208)" => "208",
+  "Pink (205)" => "205",
+  "Lime (154)" => "154",
+}
+
+colors.each do |name, color|
+  puts "#{name}:"
+  style = Ntcharts::Style.new.foreground(color)
+  chart = Ntcharts::Sparkline.new(30, 4)
+  chart.style = style
+  data.each { |v| chart.push(v) }
+  chart.draw
+  puts chart.view
+  puts
+end
+
+puts "=" * 40
+puts "Foreground + Background Combinations"
+puts "=" * 40
+puts
+
+combos = [
+  { name: "White on Blue", fg: "15", bg: "4" },
+  { name: "Black on Yellow", fg: "0", bg: "11" },
+  { name: "Red on Green", fg: "9", bg: "2" },
+  { name: "Cyan on Magenta", fg: "14", bg: "5" },
+]
+
+combos.each do |combo|
+  puts "#{combo[:name]}:"
+  style = Ntcharts::Style.new.foreground(combo[:fg]).background(combo[:bg])
+  chart = Ntcharts::Sparkline.new(30, 3)
+
+  chart.style = style
+  data.each { |v| chart.push(v) }
+  chart.draw
+
+  puts chart.view
+  puts
+end
+
+puts Ntcharts.version
