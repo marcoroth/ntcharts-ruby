@@ -1,0 +1,169 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "../lib/ntcharts"
+
+puts "=== Ntcharts Barchart Demo ==="
+puts
+
+# Define styles for different bar segments
+red_style = Ntcharts::Style.new.foreground("9").background("9")
+green_style = Ntcharts::Style.new.foreground("2").background("2")
+cyan_style = Ntcharts::Style.new.foreground("6").background("6")
+yellow_style = Ntcharts::Style.new.foreground("3").background("3")
+
+# Sample quarterly data with stacked values
+data = [
+  Ntcharts::BarData.new(
+    label: "Q1",
+    values: [
+      { name: "Sales", value: 21.2, style: red_style },
+      { name: "Costs", value: 10.1, style: green_style },
+      { name: "Tax", value: 6.5, style: cyan_style },
+      { name: "Other", value: 7.7, style: yellow_style },
+    ]
+  ),
+  Ntcharts::BarData.new(
+    label: "Q2",
+    values: [
+      { name: "Sales", value: 15.1, style: red_style },
+      { name: "Costs", value: 15.1, style: green_style },
+      { name: "Tax", value: 3.3, style: cyan_style },
+      { name: "Other", value: 7.7, style: yellow_style },
+    ]
+  ),
+  Ntcharts::BarData.new(
+    label: "Q3",
+    values: [
+      { name: "Sales", value: 13.6, style: red_style },
+      { name: "Costs", value: 14.1, style: green_style },
+      { name: "Tax", value: 4.4, style: cyan_style },
+      { name: "Other", value: 4.4, style: yellow_style },
+    ]
+  ),
+  Ntcharts::BarData.new(
+    label: "Q4",
+    values: [
+      { name: "Sales", value: 13.1, style: red_style },
+      { name: "Costs", value: 11.1, style: green_style },
+      { name: "Tax", value: 10.9, style: cyan_style },
+      { name: "Other", value: 9.8, style: yellow_style },
+    ]
+  ),
+]
+
+# 1. Basic Vertical Bar Chart
+puts "1. Vertical Bar Chart (Default)"
+puts "-" * 50
+b1 = Ntcharts::Barchart.new(40, 12)
+b1.push_all(data)
+puts b1.render
+puts
+puts "Width: #{b1.width}, Height: #{b1.height}"
+puts "Max Value: #{b1.max_value}"
+puts "Bar Width: #{b1.bar_width}, Bar Gap: #{b1.bar_gap}"
+puts
+
+# 2. Horizontal Bar Chart
+puts "2. Horizontal Bar Chart"
+puts "-" * 50
+b2 = Ntcharts::Barchart.new(40, 12)
+b2.horizontal = true
+b2.push_all(data)
+puts b2.render
+puts
+
+# 3. Bar Chart with Custom Max Value
+puts "3. Vertical Bar Chart with Fixed Max (100)"
+puts "-" * 50
+b3 = Ntcharts::Barchart.new(40, 12)
+b3.auto_max_value = false
+b3.max = 100.0
+b3.push_all(data)
+puts b3.render
+puts
+
+# 4. Bar Chart with No Axis
+puts "4. Bar Chart with No Axis"
+puts "-" * 50
+b4 = Ntcharts::Barchart.new(40, 10)
+b4.show_axis = false
+b4.push_all(data)
+puts b4.render
+puts
+
+# 5. Bar Chart with Custom Bar Gap
+puts "5. Bar Chart with No Gap Between Bars"
+puts "-" * 50
+b5 = Ntcharts::Barchart.new(40, 12)
+b5.bar_gap = 0
+b5.push_all(data)
+puts b5.render
+puts
+
+# 6. Bar Chart with Custom Bar Width
+puts "6. Bar Chart with Wide Bars (width=6)"
+puts "-" * 50
+b6 = Ntcharts::Barchart.new(45, 12)
+b6.auto_bar_width = false
+b6.bar_width = 6
+b6.push_all(data)
+puts b6.render
+puts
+
+# 7. Simple single-value bars
+puts "7. Simple Bars (Single Value per Bar)"
+puts "-" * 50
+simple_data = [
+  { label: "Jan", values: [{ name: "Revenue", value: 45.0, style: red_style }] },
+  { label: "Feb", values: [{ name: "Revenue", value: 67.0, style: red_style }] },
+  { label: "Mar", values: [{ name: "Revenue", value: 52.0, style: red_style }] },
+  { label: "Apr", values: [{ name: "Revenue", value: 89.0, style: red_style }] },
+  { label: "May", values: [{ name: "Revenue", value: 73.0, style: red_style }] },
+  { label: "Jun", values: [{ name: "Revenue", value: 95.0, style: red_style }] },
+]
+b7 = Ntcharts::Barchart.new(50, 10)
+b7.push_all(simple_data)
+puts b7.render
+puts
+
+# 8. Building bars incrementally with push
+puts "8. Building Bars Incrementally"
+puts "-" * 50
+b8 = Ntcharts::Barchart.new(40, 10)
+b8.push(label: "A", values: [{ name: "X", value: 30.0, style: cyan_style }])
+b8.push(label: "B", values: [{ name: "X", value: 50.0, style: cyan_style }])
+b8.push(label: "C", values: [{ name: "X", value: 20.0, style: cyan_style }])
+b8.push(label: "D", values: [{ name: "X", value: 70.0, style: cyan_style }])
+b8.push(label: "E", values: [{ name: "X", value: 40.0, style: cyan_style }])
+puts b8.render
+puts
+
+# 9. Using BarData builder pattern
+puts "9. Using BarData Builder Pattern"
+puts "-" * 50
+bar = Ntcharts::BarData.new(label: "2024")
+bar.add_value(name: "Q1", value: 25.0, style: red_style)
+   .add_value(name: "Q2", value: 35.0, style: green_style)
+   .add_value(name: "Q3", value: 30.0, style: cyan_style)
+   .add_value(name: "Q4", value: 45.0, style: yellow_style)
+
+b9 = Ntcharts::Barchart.new(30, 12)
+b9.push(bar)
+puts b9.render
+puts
+
+# 10. Horizontal with styled axis and labels
+puts "10. Styled Axis and Labels (Horizontal)"
+puts "-" * 50
+axis_style = Ntcharts::Style.new.foreground("3") # yellow axis
+label_style = Ntcharts::Style.new.foreground("63") # purple labels
+b10 = Ntcharts::Barchart.new(50, 12)
+b10.horizontal = true
+b10.axis_style = axis_style
+b10.label_style = label_style
+b10.push_all(data)
+puts b10.render
+puts
+
+puts Ntcharts.version

@@ -1,0 +1,75 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "../lib/ntcharts"
+
+def clear_screen
+  print "\e[2J\e[H"
+end
+
+def move_cursor_home
+  print "\e[H"
+end
+
+def hide_cursor
+  print "\e[?25l"
+end
+
+def show_cursor
+  print "\e[?25h"
+end
+
+trap("INT") do
+  show_cursor
+  puts "\nExiting..."
+  exit
+end
+
+puts "=== Ntcharts Streaming Demo ==="
+puts
+puts "This demo shows real-time updating charts."
+puts "Press Ctrl+C to exit."
+puts
+sleep 1
+
+width = 60
+height = 12
+
+chart = Ntcharts::Streamlinechart.new(width, height)
+blue_style = Ntcharts::Style.new.foreground("39")
+chart.style = blue_style
+
+tick = 0
+
+30.times do
+  value = (Math.sin(tick * 0.15) * 4) + 5
+  chart.push(value)
+  tick += 1
+end
+
+hide_cursor
+clear_screen
+
+begin
+  loop do
+    value = (Math.sin(tick * 0.15) * 4) + 5 + ((rand - 0.5) * 1)
+
+    chart.push(value)
+
+    move_cursor_home
+
+    puts "=== Streaming Chart Demo ==="
+    puts "(Press Ctrl+C to exit)"
+    puts
+    puts "Real-time sine wave with noise (tick: #{tick})"
+    puts "-" * 60
+    puts chart.render
+    puts
+    puts "Current value: #{value.round(2)}"
+
+    tick += 1
+    sleep 0.1
+  end
+ensure
+  show_cursor
+end

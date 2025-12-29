@@ -1,0 +1,135 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "../lib/ntcharts"
+
+puts "=== Ntcharts WaveLineChart Demo ==="
+puts
+puts "WaveLineChart displays multiple named datasets as curved lines,"
+puts "perfect for comparing trends across different data series."
+puts
+
+puts "1. Basic WaveLineChart (Sine Wave)"
+puts "-" * 50
+wc1 = Ntcharts::Wavelinechart.new(60, 12)
+
+40.times do |i|
+  x = i.to_f
+  y = (Math.sin(i * 0.15) * 4) + 5
+  wc1.plot(x, y)
+end
+
+puts wc1.render
+puts
+puts "Width: #{wc1.width}, Height: #{wc1.height}"
+puts "Graph Width: #{wc1.graph_width}, Graph Height: #{wc1.graph_height}"
+puts "X Range: #{wc1.min_x} - #{wc1.max_x}"
+puts "Y Range: #{wc1.min_y} - #{wc1.max_y}"
+puts
+
+puts "2. Multiple Named Datasets"
+puts "-" * 50
+wc2 = Ntcharts::Wavelinechart.new(60, 14)
+
+red_style = Ntcharts::Style.new.foreground("1")
+green_style = Ntcharts::Style.new.foreground("2")
+blue_style = Ntcharts::Style.new.foreground("4")
+
+wc2.set_data_set_styles("sine", Ntcharts::Wavelinechart::LINE_STYLE_ARC, red_style)
+wc2.set_data_set_styles("cosine", Ntcharts::Wavelinechart::LINE_STYLE_ARC, green_style)
+wc2.set_data_set_styles("linear", Ntcharts::Wavelinechart::LINE_STYLE_THIN, blue_style)
+
+40.times do |i|
+  x = i.to_f
+  wc2.plot_data_set("sine", x, (Math.sin(i * 0.15) * 4) + 5)
+  wc2.plot_data_set("cosine", x, (Math.cos(i * 0.15) * 4) + 5)
+  wc2.plot_data_set("linear", x, (i * 0.2) + 2)
+end
+
+puts wc2.render_all
+puts
+
+puts "3. Styled Chart (Purple Theme)"
+puts "-" * 50
+
+wc3 = Ntcharts::Wavelinechart.new(60, 12)
+purple_style = Ntcharts::Style.new.foreground("93")
+axis_style = Ntcharts::Style.new.foreground("240")
+label_style = Ntcharts::Style.new.foreground("245")
+
+wc3.set_styles(Ntcharts::Wavelinechart::LINE_STYLE_ARC, purple_style)
+wc3.axis_style = axis_style
+wc3.label_style = label_style
+
+50.times do |i|
+  x = i.to_f
+  y = (Math.sin(i * 0.1) * Math.cos(i * 0.05) * 5) + 6
+  wc3.plot(x, y)
+end
+
+puts wc3.render
+puts
+
+puts "4. Comparing Line Styles"
+puts "-" * 50
+wc4 = Ntcharts::Wavelinechart.new(60, 12)
+
+arc_style = Ntcharts::Style.new.foreground("3")
+wc4.set_data_set_styles("arc", Ntcharts::Wavelinechart::LINE_STYLE_ARC, arc_style)
+
+thin_style = Ntcharts::Style.new.foreground("6")
+wc4.set_data_set_styles("thin", Ntcharts::Wavelinechart::LINE_STYLE_THIN, thin_style)
+
+30.times do |i|
+  x = i.to_f
+  y = (Math.sin(i * 0.2) * 4) + 6
+  wc4.plot_data_set("arc", x, y + 2)
+  wc4.plot_data_set("thin", x, y - 2)
+end
+
+puts wc4.render_all
+puts
+puts "Top line: ARC style (curved), Bottom line: THIN style (sharp)"
+puts
+
+puts "5. Zoomed View with Custom Y Range"
+puts "-" * 50
+wc5 = Ntcharts::Wavelinechart.new(60, 10)
+
+100.times do |i|
+  x = i.to_f
+  y = (Math.sin(i * 0.1) * 10) + 10 # Range ~0 to 20
+  wc5.plot(x, y)
+end
+
+wc5.set_view_y_range(5.0, 15.0)
+wc5.set_view_x_range(20.0, 60.0)
+
+puts wc5.render
+puts
+puts "Zoomed to X: 20-60, Y: 5-15"
+puts
+
+puts "6. Clear and Re-plot"
+puts "-" * 50
+wc6 = Ntcharts::Wavelinechart.new(50, 8)
+
+20.times do |i|
+  wc6.plot(i.to_f, i.to_f * 0.5)
+end
+
+puts "Before clear:"
+puts wc6.render
+puts
+
+wc6.clear_all_data
+
+20.times do |i|
+  wc6.plot(i.to_f, 10 - (i.to_f * 0.5))
+end
+
+puts "After clear and new data:"
+puts wc6.render
+puts
+
+puts Ntcharts.version

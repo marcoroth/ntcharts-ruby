@@ -1,0 +1,115 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "../lib/ntcharts"
+
+puts "=== Ntcharts Sparkline Demo ==="
+puts
+
+data = [
+  12, 45, 23, 67, 34, 89, 45, 23, 78, 56,
+  34, 90, 67, 45, 23, 78, 90, 56, 34, 12,
+  45, 78, 90, 67, 34, 56, 78, 45, 23, 67
+]
+
+puts "1. Basic Sparkline (30x8)"
+puts "-" * 40
+s1 = Ntcharts::Sparkline.new(30, 8)
+data.each { |v| s1.push(v.to_f) }
+s1.draw
+puts s1.view
+puts
+
+puts "2. Styled Sparkline (Purple)"
+puts "-" * 40
+purple_style = Ntcharts::Style.new.foreground("63")
+s2 = Ntcharts::Sparkline.new(30, 6)
+s2.style = purple_style
+data.each { |v| s2.push(v.to_f) }
+s2.draw
+puts s2.view
+puts
+
+puts "3. Styled Sparkline (Red on Green)"
+puts "-" * 40
+red_green_style = Ntcharts::Style.new.foreground("9").background("2")
+s3 = Ntcharts::Sparkline.new(30, 5)
+s3.style = red_green_style
+data.each { |v| s3.push(v.to_f) }
+s3.draw
+puts s3.view
+puts
+
+puts "4. Styled Sparkline (Cyan on Yellow)"
+puts "-" * 40
+cyan_yellow_style = Ntcharts::Style.new.foreground("6").background("3")
+s4 = Ntcharts::Sparkline.new(30, 4)
+s4.style = cyan_yellow_style
+data.each { |v| s4.push(v.to_f) }
+s4.draw
+puts s4.view
+puts
+
+puts "5. Draw Columns Only (no background fill)"
+puts "-" * 40
+s5 = Ntcharts::Sparkline.new(30, 6)
+s5.style = purple_style
+data.each { |v| s5.push(v.to_f) }
+s5.draw_columns_only
+puts s5.view
+puts
+
+puts "6. Braille Rendering (smoother lines)"
+puts "-" * 40
+yellow_style = Ntcharts::Style.new.foreground("3")
+s6 = Ntcharts::Sparkline.new(30, 6)
+s6.style = yellow_style
+data.each { |v| s6.push(v.to_f) }
+s6.draw_braille
+puts s6.view
+puts
+
+puts "7. Sparkline Properties"
+puts "-" * 40
+s7 = Ntcharts::Sparkline.new(40, 10)
+s7.max = 100.0
+(1..20).each { |i| s7.push((Math.sin(i * 0.5) + 1) * 50) }
+s7.draw
+
+puts "Width: #{s7.width}"
+puts "Height: #{s7.height}"
+puts "Max Value: #{s7.max_value}"
+puts "Scale: #{s7.scale}"
+puts
+puts s7.view
+puts
+
+puts "8. Different Data Patterns"
+puts "-" * 40
+
+puts "Ascending:"
+s_asc = Ntcharts::Sparkline.new(20, 4)
+(1..20).each { |i| s_asc.push(i.to_f * 5) }
+s_asc.draw
+puts s_asc.view
+
+puts "Descending:"
+s_desc = Ntcharts::Sparkline.new(20, 4)
+(1..20).each { |i| s_desc.push((21 - i).to_f * 5) }
+s_desc.draw
+puts s_desc.view
+
+puts "Sine Wave:"
+s_sine = Ntcharts::Sparkline.new(40, 5)
+(0..39).each { |i| s_sine.push((Math.sin(i * 0.3) + 1) * 50) }
+s_sine.draw_braille
+puts s_sine.view
+
+puts "Random:"
+s_rand = Ntcharts::Sparkline.new(30, 5)
+30.times { s_rand.push(rand * 100) }
+s_rand.draw
+puts s_rand.view
+puts
+
+puts Ntcharts.version

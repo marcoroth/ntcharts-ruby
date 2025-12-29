@@ -1,0 +1,45 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "../lib/ntcharts"
+
+puts "=== Ntcharts Ruby Demo ==="
+puts
+puts "Terminal charting library for Ruby"
+puts "Powered by NimbleMarkets/ntcharts Go library"
+puts
+puts "-" * 50
+puts
+
+puts "Sparkline Chart"
+puts "---------------"
+puts
+
+data = [
+  100, 102, 98, 105, 110, 108, 115, 112, 120, 118,
+  125, 130, 128, 135, 140, 138, 145, 142, 150, 148
+]
+
+style = Ntcharts::Style.new.foreground("63")
+
+chart = Ntcharts::Sparkline.new(40, 8)
+chart.set_style(style)
+data.each { |v| chart.push(v.to_f) }
+chart.draw
+
+puts chart.view
+puts
+puts "Width: #{chart.width}, Height: #{chart.height}"
+puts "Max Value: #{chart.max_value}"
+puts
+
+puts "Braille Rendering:"
+chart2 = Ntcharts::Sparkline.new(40, 6)
+chart2.set_style(Ntcharts::Style.new.foreground("3"))
+data.each { |v| chart2.push(v.to_f) }
+chart2.draw_braille
+puts chart2.view
+puts
+
+puts "-" * 50
+puts Ntcharts.version

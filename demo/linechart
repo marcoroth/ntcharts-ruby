@@ -1,0 +1,109 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "../lib/ntcharts"
+
+puts "=== Ntcharts Linechart Demo ==="
+puts
+
+puts "1. Basic Linechart (Explicit Range)"
+puts "-" * 50
+lc1 = Ntcharts::Linechart.new(50, 12, 0.0, 10.0, 0.0, 10.0)
+
+(0..10).each do |i|
+  x = i.to_f
+  y = (Math.sin(i * 0.5) * 4) + 5
+  lc1.draw_rune(x, y, "*")
+end
+
+lc1.draw_axes
+
+puts lc1.view
+puts
+puts "Width: #{lc1.width}, Height: #{lc1.height}"
+puts "Graph Width: #{lc1.graph_width}, Graph Height: #{lc1.graph_height}"
+puts "X Range: #{lc1.min_x} - #{lc1.max_x}"
+puts "Y Range: #{lc1.min_y} - #{lc1.max_y}"
+puts
+
+puts "2. Linechart with Explicit Range"
+puts "-" * 50
+lc2 = Ntcharts::Linechart.new(50, 12, 0.0, 20.0, 0.0, 10.0)
+
+(0..20).each do |i|
+  x = i.to_f
+  y = (Math.sin(i * 0.3) * 4) + 5
+  lc2.draw_rune(x, y, "o")
+end
+
+lc2.draw_axes
+puts lc2.view
+puts
+
+puts "3. Individual Lines (Thin Style)"
+puts "-" * 50
+lc3 = Ntcharts::Linechart.new(50, 12, 0.0, 20.0, 0.0, 10.0)
+
+lc3.draw_line(0.0, 2.0, 5.0, 8.0, Ntcharts::Linechart::LINE_STYLE_THIN)
+lc3.draw_line(8.0, 8.0, 15.0, 3.0, Ntcharts::Linechart::LINE_STYLE_THIN)
+lc3.draw_line(15.0, 5.0, 20.0, 9.0, Ntcharts::Linechart::LINE_STYLE_THIN)
+lc3.draw_axes
+
+puts lc3.view
+puts
+puts "(For connected line sequences, use WaveLineChart instead)"
+puts
+
+puts "4. Braille Lines (Smooth Rendering)"
+puts "-" * 50
+lc4 = Ntcharts::Linechart.new(60, 15, 0.0, 30.0, -5.0, 10.0)
+
+points = (0..30).map do |i|
+  [i.to_f, (Math.sin(i * 0.2) * 4) + 3]
+end
+
+points.each_cons(2) do |(x1, y1), (x2, y2)|
+  lc4.draw_braille_line(x1, y1, x2, y2)
+end
+
+lc4.draw_axes
+puts lc4.view
+puts
+
+puts "5. Styled Linechart (Colored Points)"
+puts "-" * 50
+lc5 = Ntcharts::Linechart.new(50, 12, 0.0, 15.0, 0.0, 10.0)
+red_style = Ntcharts::Style.new.foreground("9")
+green_style = Ntcharts::Style.new.foreground("2")
+blue_style = Ntcharts::Style.new.foreground("4")
+
+(0..15).each do |i|
+  x = i.to_f
+  y1 = (Math.sin(i * 0.3) * 3) + 5
+  y2 = (Math.sin((i * 0.3) + 1) * 3) + 5
+  y3 = (Math.sin((i * 0.3) + 2) * 3) + 5
+
+  lc5.draw_rune(x, y1, "#", red_style)
+  lc5.draw_rune(x, y2, "+", green_style)
+  lc5.draw_rune(x, y3, "*", blue_style)
+end
+lc5.draw_axes
+puts lc5.view
+puts
+
+puts "6. Custom Step Settings (Hide X axis)"
+puts "-" * 50
+lc6 = Ntcharts::Linechart.new(50, 10, 0.0, 20.0, 0.0, 10.0)
+lc6.x_step = 0
+
+(0..20).each do |i|
+  x = i.to_f
+  y = i.to_f / 2
+  lc6.draw_rune(x, y, "+")
+end
+
+lc6.draw_axes
+puts lc6.view
+puts
+
+puts Ntcharts.version
