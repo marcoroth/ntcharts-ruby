@@ -31,6 +31,4 @@ Gem::Specification.new do |spec|
 
   spec.require_paths = ["lib"]
   spec.extensions = ["ext/ntcharts/extconf.rb"]
-
-  spec.add_dependency "rake-compiler", "~> 1.2"
 end
